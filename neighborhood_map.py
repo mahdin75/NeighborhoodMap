@@ -23,13 +23,31 @@
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtWidgets import QAction,QTableWidgetItem
+from qgis.gui import QgsFileWidget
 
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
 from .neighborhood_map_dialog import NeighborhoodMapDialog
 import os.path
+
+from qgis.core import (
+    QgsRasterLayer
+)
+import gdal
+import numpy as np
+
+from .landuse import LandUse
+from .model import Model
+
+def StringToRaster(path_to_tif):
+    rlayer = QgsRasterLayer(path_to_tif, "LandUse layer name")
+    if not rlayer.isValid():
+        print("Layer failed to load!")
+    gd = gdal.Open(str(rlayer.source()))
+    array = gd.ReadAsArray()
+    return array
 
 
 class NeighborhoodMap:
@@ -179,6 +197,16 @@ class NeighborhoodMap:
                 action)
             self.iface.removeToolBarIcon(action)
 
+    def select_file(self):
+        input_file_path = self.dlg.mQgsFileWidget.filePath()
+        raster_input = StringToRaster(input_file_path)
+        landuse_values = np.unique(raster_input)
+        table = self.dlg.tableWidget
+        for lv in landuse_values:
+            rowPosition = table.rowCount()
+            table.insertRow(rowPosition)
+            table.setItem(rowPosition , 0, QTableWidgetItem(str(lv)))
+            table.setItem(rowPosition , 1, QTableWidgetItem(""))
 
     def run(self):
         """Run method that performs all the real work"""
@@ -188,13 +216,40 @@ class NeighborhoodMap:
         if self.first_start == True:
             self.first_start = False
             self.dlg = NeighborhoodMapDialog()
+            self.dlg.mQgsFileWidget.fileChanged.connect(self.select_file)
 
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
+        
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            pass
+            table = self.dlg.tableWidget
+            out_dir = self.dlg.mQgsFileWidget_2.filePath()
+            print(out_dir)
+
+            lus_table = []
+            for i in range(table.rowCount()):
+                if table.item(i,1).text() != '':
+                    lus_table.append([int(table.item(i,0).text()),table.item(i,1).text()])
+            
+            print(lus_table)
+            
+            landuses = []
+            for i in lus_table:
+                lui = LandUse(i[1],i[0])
+                landuses.append(lui)
+
+            print(int(self.dlg.textEdit_2.toPlainText()),int(self.dlg.textEdit.toPlainText()))
+
+            model = Model(self.dlg.mQgsFileWidget.filePath(),landuses,pixel_size = int(self.dlg.textEdit.toPlainText()),max_effect_size = int(self.dlg.textEdit_2.toPlainText()),out_dir=out_dir)
+            print("calculate enrichment factors")
+            for lu2 in landuses:
+                for lu1 in landuses:
+                    model.plot_enrichment_factor(lu1,lu2)
+            print("create neighborhood maps")
+            for lu in landuses:
+                model.plot_neighborhood_map(lu)

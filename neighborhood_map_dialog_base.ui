@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>390</width>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>250</y>
+     <x>30</x>
+     <y>340</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -44,21 +44,21 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>101</width>
+     <width>131</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select Raster Input</string>
+    <string>Select Input Raster File</string>
    </property>
   </widget>
   <widget class="QgsFileWidget" name="mQgsFileWidget_2">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>200</y>
+     <y>290</y>
      <width>341</width>
-     <height>27</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="storageMode">
@@ -69,13 +69,13 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>180</y>
-     <width>101</width>
+     <y>270</y>
+     <width>161</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select Raster Output Folder</string>
+    <string>Select Output Folder</string>
    </property>
   </widget>
   <widget class="QTableWidget" name="tableWidget">
@@ -97,6 +97,52 @@
      <string>Lanuse Name</string>
     </property>
    </column>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>190</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pixel Size(m)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>190</y>
+     <width>171</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Maximum effective distance(m)</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>220</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_2">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>220</y>
+     <width>151</width>
+     <height>31</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <customwidgets>
