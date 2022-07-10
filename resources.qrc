@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/neighborhood_map" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
